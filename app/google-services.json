@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "742420112621",
+    "project_id": "trasteapp",
+    "storage_bucket": "trasteapp.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:742420112621:android:8c6aabe8cc5abd8a3318e4",
+        "android_client_info": {
+          "package_name": "com.example.trasteapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "742420112621-6rdgpimaotki7nrvbq7227igvl640jc0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.trasteapp",
+            "certificate_hash": "eb890ced8f949d4eb5b5ad30ecdfbf8438dc3e55"
+          }
+        },
+        {
+          "client_id": "742420112621-crgfan6m793pnlk9rutumil4opplsush.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBwJlT0so96duRdHjkR5BUAD2JGqeN-l6w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "742420112621-crgfan6m793pnlk9rutumil4opplsush.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

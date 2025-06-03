@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">TrasteApp</string>
+    <string name="default_web_client_id">742420112621-crgfan6m793pnlk9rutumil4opplsush.apps.googleusercontent.com</string>
+    <string name="contrase_a">Contraseña</string>
+    <string name="iniciar_sesi_n">Iniciar sesión</string>
+    <string name="no_tienes_cuenta_reg_strate">¿No tienes cuenta? Regístrate</string>
+    <string name="correo_electr_nico">Correo electrónico</string>
+    <string name="nombre_de_usuario">Nombre de usuario</string>
+    <string name="correo_electr_nicoR">Correo electrónico</string>
+    <string name="contrase_aR">Contraseña</string>
+    <string name="confirmar_contrase_aR">Confirmar contraseña</string>
+    <string name="registrarse">Registrarse</string>
+    <string name="bienvenido_a_trasteapp">Bienvenido a TrasteApp</string>
+    <string name="buscar_trastero">Buscar Trastero</string>
+    <string name="facturas">Facturas</string>
+    <string name="contratos">Contratos</string>
+    <string name="ayuda_con_portes">Ayuda con Portes</string>
+    <string name="atenci_n_al_cliente">Atención al Cliente</string>
+    <string name="cerrar_sesi_n">Cerrar Sesión</string>
+</resources>

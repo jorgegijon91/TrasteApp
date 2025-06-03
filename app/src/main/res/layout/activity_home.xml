@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:gravity="center_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/textTipoUsuario"
+            android:text="Usuario: Cargando..."
+            android:textSize="16sp"
+            android:textColor="#4F4F4F"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="@font/roboto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:text="@string/bienvenido_a_trasteapp"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="#000000"
+            android:layout_marginBottom="24dp"
+            android:fontFamily="@font/roboto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/buttonBuscar"
+            android:text="@string/buscar_trastero"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#2962FF"
+            android:textColor="#FFFFFF"
+            android:fontFamily="@font/roboto"
+            android:textSize="18sp"
+            android:layout_marginBottom="16dp"/>
+
+        <Button
+            android:id="@+id/buttonFacturas"
+            android:text="@string/facturas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#2962FF"
+            android:textColor="#FFFFFF"
+            android:fontFamily="@font/roboto"
+            android:textSize="18sp"
+            android:layout_marginBottom="16dp"/>
+
+        <Button
+            android:id="@+id/buttonContratos"
+            android:text="@string/contratos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#2962FF"
+            android:textColor="#FFFFFF"
+            android:fontFamily="@font/roboto"
+            android:textSize="18sp"
+            android:layout_marginBottom="16dp"/>
+
+        <Button
+            android:id="@+id/buttonPortes"
+            android:text="@string/ayuda_con_portes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#2962FF"
+            android:textColor="#FFFFFF"
+            android:fontFamily="@font/roboto"
+            android:textSize="18sp"
+            android:layout_marginBottom="16dp"/>
+
+        <Button
+            android:id="@+id/buttonAtencion"
+            android:text="@string/atenci_n_al_cliente"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#2962FF"
+            android:textColor="#FFFFFF"
+            android:fontFamily="@font/roboto"
+            android:textSize="18sp"
+            android:layout_marginBottom="16dp"/>
+
+        <Button
+            android:id="@+id/buttonCambiarPlan"
+            android:text="Cambiar plan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#FFEB3B"
+            android:textColor="#000000"
+            android:fontFamily="@font/roboto"
+            android:textSize="18sp"
+            android:layout_marginBottom="32dp" />
+
+        <Button
+            android:id="@+id/buttonCerrarSesion"
+            android:text="@string/cerrar_sesi_n"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#D32F2F"
+            android:textColor="#FFFFFF"
+            android:fontFamily="@font/roboto"
+            android:textSize="18sp"
+            android:layout_marginTop="16dp"/>
+    </LinearLayout>
+
+</ScrollView>

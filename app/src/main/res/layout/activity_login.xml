@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/editTextEmail"
+            android:hint="@string/correo_electr_nico"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:textColor="#000000"
+            android:fontFamily="@font/roboto"
+            android:textSize="16sp"
+            android:padding="12dp"
+            android:backgroundTint="#2962FF" />
+
+        <EditText
+            android:id="@+id/editTextPassword"
+            android:hint="@string/contrase_a"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:textColor="#000000"
+            android:fontFamily="@font/roboto"
+            android:textSize="16sp"
+            android:padding="12dp"
+            android:backgroundTint="#2962FF"
+            android:layout_marginTop="12dp"/>
+
+        <Button
+            android:id="@+id/buttonLogin"
+            android:text="@string/iniciar_sesi_n"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#2962FF"
+            android:fontFamily="@font/roboto"
+            android:textSize="18sp"
+            android:layout_marginTop="24dp"/>
+
+        <Button
+            android:id="@+id/buttonGoToRegister"
+            android:text="@string/no_tienes_cuenta_reg_strate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#2962FF"
+            android:backgroundTint="#FFFFFF"
+            android:fontFamily="@font/roboto"
+            android:textSize="16sp"
+            android:layout_marginTop="12dp"
+            android:background="@android:color/transparent"/>
+
+    </LinearLayout>
+
+</ScrollView>

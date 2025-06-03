@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="24dp"
+    android:background="@android:color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:paddingBottom="24dp">
+
+        <!-- Imagen del trastero -->
+        <ImageView
+            android:id="@+id/ivTrastero"
+            android:layout_width="250dp"
+            android:layout_height="180dp"
+            android:scaleType="centerCrop"
+            android:layout_marginBottom="24dp"
+            android:contentDescription="Imagen del trastero" />
+
+        <!-- Información del trastero -->
+        <TextView
+            android:id="@+id/tvCiudad"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ciudad:"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/tvDescripcion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Descripción"
+            android:textSize="16sp"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/tvPrecio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Precio:"
+            android:textSize="16sp"
+            android:textColor="#2962FF"
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Botón de pagar -->
+        <Button
+            android:id="@+id/btnPagar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Pagar factura"
+            android:backgroundTint="#2962FF"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="16dp" />
+
+        <!-- Botón de domiciliar -->
+        <Button
+            android:id="@+id/btnDomiciliar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Domiciliar pago"
+            android:backgroundTint="#4CAF50"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="12dp" />
+    </LinearLayout>
+</ScrollView>

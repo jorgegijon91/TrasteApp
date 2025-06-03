@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".trasteros.FirmarContratoActivity">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- Condiciones legales -->
+        <TextView
+            android:id="@+id/textoCondiciones"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:text="Condiciones legales"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Área de firma -->
+        <com.github.gcacace.signaturepad.views.SignaturePad
+            android:id="@+id/signature_pad"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:background="#EEEEEE"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Botón limpiar -->
+        <Button
+            android:id="@+id/btn_limpiar_firma"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Limpiar firma"
+            android:layout_marginBottom="10dp" />
+
+        <!-- Botón enviar -->
+        <Button
+            android:id="@+id/botonEnviarFirma"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Firmar y enviar" />
+    </LinearLayout>
+</ScrollView>
