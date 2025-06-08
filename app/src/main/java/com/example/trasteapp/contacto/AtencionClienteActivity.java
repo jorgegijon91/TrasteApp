@@ -11,46 +11,56 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.trasteapp.R;
 
+/**
+ * Actividad que permite al usuario contactar con el soporte de TrasteApp
+ * enviando un correo electrónico desde una app instalada en su dispositivo.
+ * Valida que los campos de asunto y mensaje estén completos antes de generar el correo.
+ *
+ * Dirección de destino: trasteapp@gmail.com
+ *
+ * @author Jorge Fresno
+ */
 public class AtencionClienteActivity extends AppCompatActivity {
 
-    // Declaración de los elementos de la interfaz
     private EditText editAsunto, editMensaje;
     private Button botonEnviar;
 
+    /**
+     * Método que se ejecuta al crear la actividad.
+     * Inicializa los elementos de interfaz y configura el botón para enviar correo.
+     *
+     * @param savedInstanceState Estado anterior de la actividad, si lo hay.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_atencion_cliente); // Carga la interfaz de la actividad
+        setContentView(R.layout.activity_atencion_cliente);
 
-        // Asocia los elementos del layout a variables de Java
         editAsunto = findViewById(R.id.edit_asunto);
         editMensaje = findViewById(R.id.edit_mensaje);
         botonEnviar = findViewById(R.id.boton_enviar);
 
-        // Acciones al hacer clic en el botón "Enviar"
+        // Listener del botón "Enviar"
         botonEnviar.setOnClickListener(v -> {
-            // Obtiene los textos introducidos por el usuario
             String asunto = editAsunto.getText().toString().trim();
             String mensaje = editMensaje.getText().toString().trim();
 
-            // Validación de campos vacíos
             if (asunto.isEmpty() || mensaje.isEmpty()) {
                 Toast.makeText(this, "Debes rellenar todos los campos", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            // Crea un intent para enviar un correo electrónico
+            // Configura un intent de envío de correo
             Intent intent = new Intent(Intent.ACTION_SEND);
-            intent.setType("message/rfc822"); // Especifica que solo apps de correo deben manejarlo
-            intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"trasteapp@gmail.com"}); // Destinatario
-            intent.putExtra(Intent.EXTRA_SUBJECT, asunto); // Asunto del correo
-            intent.putExtra(Intent.EXTRA_TEXT, mensaje); // Cuerpo del mensaje
+            intent.setType("message/rfc822");
+            intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"trasteapp@gmail.com"});
+            intent.putExtra(Intent.EXTRA_SUBJECT, asunto);
+            intent.putExtra(Intent.EXTRA_TEXT, mensaje);
 
             try {
-                // Abre un selector de apps de correo para enviar el mensaje
+                // Lanza selector de aplicaciones de correo
                 startActivity(Intent.createChooser(intent, "Enviar correo..."));
             } catch (android.content.ActivityNotFoundException ex) {
-                // Si no hay apps de correo, se muestra un mensaje de error
                 Toast.makeText(this, "No hay ninguna app de correo instalada", Toast.LENGTH_SHORT).show();
             }
         });

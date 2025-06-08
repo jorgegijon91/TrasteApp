@@ -16,6 +16,15 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Actividad encargada del registro de nuevos usuarios en la aplicación TrasteApp.
+ * Permite introducir correo electrónico, contraseña y nombre de usuario.
+ *
+ * Se conecta con Firebase Authentication para crear cuentas
+ * y con Firestore para almacenar datos adicionales del usuario.
+ *
+ * @author Jorge Fresno
+ */
 public class RegisterActivity extends AppCompatActivity {
 
     private EditText editTextEmail, editTextPassword, editTextUsername;
@@ -23,6 +32,12 @@ public class RegisterActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
 
+    /**
+     * Método que se ejecuta al iniciar la actividad.
+     * Configura la interfaz y los listeners para los botones de registro e ir a login.
+     *
+     * @param savedInstanceState Estado guardado de la actividad.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,11 +55,16 @@ public class RegisterActivity extends AppCompatActivity {
         // Botón para registrar al usuario
         buttonRegister.setOnClickListener(v -> registerUser());
 
-        // Botón para ir a pantalla de login
+        // Botón para ir a la pantalla de inicio de sesión
         buttonGoToLogin.setOnClickListener(v ->
                 startActivity(new Intent(RegisterActivity.this, LoginActivity.class)));
     }
 
+    /**
+     * Registra un nuevo usuario en Firebase Authentication.
+     * Si el registro es exitoso, guarda los datos del usuario en Firestore
+     * y redirige a la actividad principal de la aplicación.
+     */
     private void registerUser() {
         String email = editTextEmail.getText().toString().trim();
         String password = editTextPassword.getText().toString().trim();
@@ -57,16 +77,13 @@ public class RegisterActivity extends AppCompatActivity {
 
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnSuccessListener(authResult -> {
-                    // UID del nuevo usuario
                     String uid = authResult.getUser().getUid();
 
-                    // Crear objeto de datos para Firestore
                     Map<String, Object> userData = new HashMap<>();
                     userData.put("email", email);
                     userData.put("username", username);
-                    userData.put("tipo", "gratuito");  // por defecto
+                    userData.put("tipo", "gratuito");
 
-                    // Guardar en Firestore bajo la colección "usuarios"
                     db.collection("usuarios").document(uid)
                             .set(userData)
                             .addOnSuccessListener(unused -> {

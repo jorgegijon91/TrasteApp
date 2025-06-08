@@ -17,6 +17,13 @@ import com.google.firebase.firestore.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+/**
+ * Actividad que permite a usuarios premium visualizar el contrato vigente
+ * y gestionar el pago manual o domiciliado de su factura mensual.
+ * Incluye validaciones sobre contratos firmados y pagos ya realizados.
+ *
+ * @author Jorge Fresno
+ */
 public class FacturaActivity extends AppCompatActivity {
 
     private TextView tvCiudad, tvDescripcion, tvPrecio;
@@ -26,12 +33,18 @@ public class FacturaActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private double precioGlobal = 0.0;
 
+    /**
+     * Método que se ejecuta al crear la actividad.
+     * Enlaza los elementos visuales, carga los datos del contrato firmado
+     * y configura los botones de pago y domiciliación.
+     *
+     * @param savedInstanceState Estado anterior de la actividad.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_factura);
 
-        // Asociación con elementos de la interfaz
         tvCiudad = findViewById(R.id.tvCiudad);
         tvDescripcion = findViewById(R.id.tvDescripcion);
         tvPrecio = findViewById(R.id.tvPrecio);
@@ -41,25 +54,29 @@ public class FacturaActivity extends AppCompatActivity {
 
         db = FirebaseFirestore.getInstance();
 
-        // Cargar contrato ya firmado
         cargarContratoFirmado();
 
-        // Acciones de los botones
         btnPagar.setOnClickListener(v -> registrarFactura(true));
         btnDomiciliar.setOnClickListener(v -> registrarFactura(false));
     }
 
+    /**
+     * Cierra la actividad si el usuario ha cerrado sesión.
+     */
     @Override
     protected void onResume() {
         super.onResume();
-        // Previene acceso si el usuario ha cerrado sesión
         if (FirebaseAuth.getInstance().getCurrentUser() == null) {
             finish();
         }
     }
 
+    /**
+     * Obtiene el contrato firmado del usuario y muestra sus datos.
+     * También llama a {@link #verificarRestricciones(String)} para controlar
+     * si se puede pagar o domiciliar.
+     */
     private void cargarContratoFirmado() {
-        // Validar sesión de usuario
         if (FirebaseAuth.getInstance().getCurrentUser() == null) {
             Toast.makeText(this, "Usuario no autenticado", Toast.LENGTH_SHORT).show();
             return;
@@ -67,7 +84,6 @@ public class FacturaActivity extends AppCompatActivity {
 
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        // Obtener solo contratos firmados
         db.collection("usuarios").document(uid).collection("contratos")
                 .whereEqualTo("firmado", true)
                 .limit(1)
@@ -78,7 +94,6 @@ public class FacturaActivity extends AppCompatActivity {
                         Map<String, Object> data = doc.getData();
                         if (data == null) return;
 
-                        // Obtener y mostrar los datos del contrato
                         String ciudad = (String) data.get("ciudad");
                         String descripcion = (String) data.get("descripcion");
                         String precioStr = String.valueOf(data.get("precio")).replaceAll("[^\\d.]", "");
@@ -106,8 +121,13 @@ public class FacturaActivity extends AppCompatActivity {
                 .addOnFailureListener(e -> Toast.makeText(this, "Error al cargar datos", Toast.LENGTH_SHORT).show());
     }
 
+    /**
+     * Desactiva los botones de pago o domiciliación si ya se ha pagado en el mes actual
+     * o si el contrato está marcado como domiciliado.
+     *
+     * @param uid UID del usuario autenticado.
+     */
     private void verificarRestricciones(String uid) {
-        // Revisar si ya está domiciliado
         db.collection("usuarios").document(uid).collection("contratos")
                 .whereEqualTo("firmado", true)
                 .limit(1)
@@ -122,8 +142,8 @@ public class FacturaActivity extends AppCompatActivity {
                         }
                     }
 
-                    // Verificar si ya se pagó la factura del mes actual
                     String mesActual = new SimpleDateFormat("yyyyMM", Locale.getDefault()).format(new Date());
+
                     db.collection("usuarios").document(uid)
                             .collection("facturas")
                             .document("factura_" + mesActual)
@@ -144,11 +164,17 @@ public class FacturaActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Registra la factura del usuario en Firestore.
+     * Si {@code pagoUnico} es true, se marca como pagada manualmente.
+     * Si es false, se actualiza el contrato para indicar que el pago está domiciliado.
+     *
+     * @param pagoUnico true si es un pago manual, false para domiciliación.
+     */
     private void registrarFactura(boolean pagoUnico) {
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         if (pagoUnico) {
-            // Crear factura con estado pagada
             Map<String, Object> factura = new HashMap<>();
             factura.put("fecha", Timestamp.now());
             factura.put("importe", precioGlobal);
@@ -167,7 +193,6 @@ public class FacturaActivity extends AppCompatActivity {
                     .addOnFailureListener(e -> Toast.makeText(this, "Error al pagar.", Toast.LENGTH_SHORT).show());
 
         } else {
-            // Marcar contrato como domiciliado
             db.collection("usuarios").document(uid)
                     .collection("contratos")
                     .whereEqualTo("firmado", true)

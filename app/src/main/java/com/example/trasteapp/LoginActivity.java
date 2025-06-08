@@ -16,62 +16,75 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Actividad de inicio de sesión para usuarios registrados en TrasteApp.
+ * Permite iniciar sesión mediante correo y contraseña,
+ * y redirige a Home si la autenticación es exitosa.
+ *
+ * @author Jorge Fresno
+ */
 public class LoginActivity extends AppCompatActivity {
 
     private EditText editTextEmail, editTextPassword;
     private Button buttonLogin, buttonGoToRegister;
-
     private FirebaseAuth auth;
 
+    /**
+     * Método principal que se ejecuta al crear la actividad.
+     * Inicializa componentes visuales y configura los listeners para login y navegación a registro.
+     *
+     * @param savedInstanceState Estado anterior de la actividad si existía.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        // Inicializar FirebaseAuth
         auth = FirebaseAuth.getInstance();
 
-        // Enlazar componentes de la interfaz
+        // Enlaza los elementos visuales
         editTextEmail = findViewById(R.id.editTextEmail);
         editTextPassword = findViewById(R.id.editTextPassword);
         buttonLogin = findViewById(R.id.buttonLogin);
         buttonGoToRegister = findViewById(R.id.buttonGoToRegister);
 
-        // Botón de login
+        // Listener para botón de login
         buttonLogin.setOnClickListener(v -> loginUser());
 
-        // Ir a pantalla de registro
+        // Navegación a pantalla de registro
         buttonGoToRegister.setOnClickListener(v ->
                 startActivity(new Intent(LoginActivity.this, RegisterActivity.class))
         );
     }
 
+    /**
+     * Realiza el proceso de autenticación con Firebase usando correo y contraseña.
+     * Si el login tiene éxito, verifica si el usuario está en Firestore y lo registra si es necesario.
+     */
     private void loginUser() {
         String email = editTextEmail.getText().toString().trim();
         String password = editTextPassword.getText().toString().trim();
 
-        // Validación de campos vacíos
+        // Validación de campos obligatorios
         if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
             Toast.makeText(this, "Introduce el correo y la contraseña.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Login con Firebase
         auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         Toast.makeText(this, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show();
 
-                        // Obtener UID del usuario autenticado
                         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-                        // Verificamos si ya existe documento en Firestore
+                        // Verifica si el documento del usuario existe en Firestore
                         FirebaseFirestore.getInstance().collection("usuarios")
                                 .document(uid)
                                 .get()
                                 .addOnSuccessListener(snapshot -> {
                                     if (!snapshot.exists()) {
-                                        // 🆕 Si no existe, lo creamos como usuario gratuito
+                                        // Crea usuario gratuito por defecto si no existe
                                         Map<String, Object> userData = new HashMap<>();
                                         userData.put("email", email);
                                         userData.put("tipo", "gratuito");
@@ -82,14 +95,13 @@ public class LoginActivity extends AppCompatActivity {
                                     }
                                 });
 
-                        // Pasamos a HomeActivity
+                        // Redirige al usuario al Home
                         startActivity(new Intent(this, HomeActivity.class));
                         finish();
                     } else {
-                        // Error al iniciar sesión
+                        // Muestra error si falló la autenticación
                         Toast.makeText(this, "Correo o contraseña incorrectos", Toast.LENGTH_SHORT).show();
                     }
                 });
-
     }
 }

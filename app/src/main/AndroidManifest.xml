@@ -15,6 +15,9 @@
         android:theme="@style/Theme.TrasteApp"
         tools:targetApi="31">
         <activity
+            android:name=".ActualizarPerfilActivity"
+            android:exported="false" />
+        <activity
             android:name=".plan.CambiarPlanActivity"
             android:exported="false" />
         <activity

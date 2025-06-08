@@ -19,60 +19,76 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
+/**
+ * Actividad que muestra la lista de contratos del usuario actual.
+ * Permite visualizar contratos ya firmados o pendientes, y en este último caso,
+ * acceder a la actividad de firma de contrato.
+ *
+ * @author Jorge Fresno
+ */
 public class ContratosActivity extends AppCompatActivity {
 
-    private FirebaseFirestore db; // Referencia a la base de datos Firestore
-    private LinearLayout contratosLayout; // Contenedor donde se añadirán los contratos
+    private FirebaseFirestore db;
+    private LinearLayout contratosLayout;
 
+    /**
+     * Método llamado al crear la actividad. Inicializa vistas y Firestore.
+     *
+     * @param savedInstanceState Estado previo de la actividad, si lo hay.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contratos);
 
-        contratosLayout = findViewById(R.id.contratos_layout); // Enlaza con el layout
-        db = FirebaseFirestore.getInstance(); // Inicializa Firestore
+        contratosLayout = findViewById(R.id.contratos_layout);
+        db = FirebaseFirestore.getInstance();
     }
 
+    /**
+     * Método que se ejecuta cada vez que la actividad vuelve a estar en primer plano.
+     * Verifica si el usuario está autenticado y carga los contratos desde Firestore.
+     */
     @Override
     protected void onResume() {
         super.onResume();
 
-        // Verifica si el usuario está autenticado
         if (FirebaseAuth.getInstance().getCurrentUser() == null) {
-            finish(); // Cierra la actividad si no hay sesión activa
+            finish();
             return;
         }
 
-        cargarContratos(); // Carga los contratos desde Firestore
+        cargarContratos();
     }
 
+    /**
+     * Carga los contratos del usuario actual desde Firestore y los muestra en la interfaz.
+     * También gestiona el botón de firma para contratos aún no firmados.
+     */
     private void cargarContratos() {
-        contratosLayout.removeAllViews(); // Limpia los contratos anteriores
+        contratosLayout.removeAllViews();
 
-        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid(); // ID del usuario actual
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        // Consulta todos los contratos del usuario
         db.collection("usuarios").document(uid).collection("contratos")
                 .get()
                 .addOnSuccessListener(querySnapshot -> {
-                    Set<String> idsMostrados = new HashSet<>(); // Para evitar duplicados
+                    Set<String> idsMostrados = new HashSet<>();
 
                     for (DocumentSnapshot doc : querySnapshot) {
                         String id = doc.getId();
-                        if (idsMostrados.contains(id)) continue; // Si ya se mostró, omitir
+                        if (idsMostrados.contains(id)) continue;
                         idsMostrados.add(id);
 
                         Boolean firmado = doc.getBoolean("firmado");
                         if (firmado == null) firmado = false;
 
                         Timestamp fechaReserva = doc.getTimestamp("fecha_reserva");
-                        // Si no está firmado y pasó más de 24h desde la reserva, omitir
                         if (!firmado && fechaReserva != null) {
                             long horas = (Timestamp.now().getSeconds() - fechaReserva.getSeconds()) / 3600;
                             if (horas >= 24) continue;
                         }
 
-                        // Obtener datos del contrato
                         String ciudad = doc.getString("ciudad");
                         String descripcion = doc.getString("descripcion");
                         String precio = doc.getString("precio");
@@ -87,24 +103,23 @@ public class ContratosActivity extends AppCompatActivity {
                                 ? new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(fechaFin.toDate())
                                 : "";
 
-                        // Crear un TextView con la información del contrato
+                        // Crear vista de contrato
                         TextView contratoView = new TextView(this);
                         contratoView.setText(
-                                "📍 " + ciudad + "\n" +
+                                " Ciudad: " + ciudad + "\n" +
                                         descripcion + "\n" +
-                                        "💶 Precio: " + precio + "\n" +
-                                        "📅 Desde: " + fechaInicio + " hasta " + fechaFinTxt
+                                        " Precio: " + precio + "\n" +
+                                        " Desde: " + fechaInicio + " hasta " + fechaFinTxt
                         );
                         contratoView.setPadding(0, 20, 0, 10);
 
-                        // Botón para firmar el contrato
+                        // Botón para firmar contrato si está pendiente
                         Button firmarBtn = new Button(this);
                         firmarBtn.setText(firmado ? "CONTRATO FIRMADO" : "FIRMAR CONTRATO");
-                        firmarBtn.setEnabled(!firmado); // Deshabilita si ya está firmado
+                        firmarBtn.setEnabled(!firmado);
 
-                        String idTrastero = doc.getId(); // ID del trastero asociado
+                        String idTrastero = doc.getId();
 
-                        // Acción del botón si el contrato aún no está firmado
                         if (!firmado) {
                             firmarBtn.setOnClickListener(v -> {
                                 Intent intent = new Intent(this, FirmarContratoActivity.class);
@@ -113,11 +128,10 @@ public class ContratosActivity extends AppCompatActivity {
                                 intent.putExtra("descripcion", descripcion);
                                 intent.putExtra("precio", precio);
                                 intent.putStringArrayListExtra("imagenes", (ArrayList<String>) doc.get("imagenes"));
-                                startActivity(intent); // Abre la actividad de firma
+                                startActivity(intent);
                             });
                         }
 
-                        // Agrega los elementos al layout
                         contratosLayout.addView(contratoView);
                         contratosLayout.addView(firmarBtn);
                     }
