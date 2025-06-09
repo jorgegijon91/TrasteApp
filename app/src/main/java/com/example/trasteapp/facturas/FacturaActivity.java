@@ -1,8 +1,10 @@
 package com.example.trasteapp.facturas;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,192 +28,171 @@ import java.util.*;
  */
 public class FacturaActivity extends AppCompatActivity {
 
-    private TextView tvCiudad, tvDescripcion, tvPrecio;
-    private ImageView ivTrastero;
-    private Button btnPagar, btnDomiciliar;
-
+    private LinearLayout layoutContratos;
+    private TextView tvSinContratos;
     private FirebaseFirestore db;
-    private double precioGlobal = 0.0;
 
     /**
-     * Método que se ejecuta al crear la actividad.
-     * Enlaza los elementos visuales, carga los datos del contrato firmado
-     * y configura los botones de pago y domiciliación.
-     *
-     * @param savedInstanceState Estado anterior de la actividad.
+     * Inicializa la actividad, Firebase y los elementos visuales.
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_factura);
 
-        tvCiudad = findViewById(R.id.tvCiudad);
-        tvDescripcion = findViewById(R.id.tvDescripcion);
-        tvPrecio = findViewById(R.id.tvPrecio);
-        ivTrastero = findViewById(R.id.ivTrastero);
-        btnPagar = findViewById(R.id.btnPagar);
-        btnDomiciliar = findViewById(R.id.btnDomiciliar);
-
+        layoutContratos = findViewById(R.id.layout_contratos);
+        tvSinContratos = findViewById(R.id.tvSinContratos);
         db = FirebaseFirestore.getInstance();
 
-        cargarContratoFirmado();
-
-        btnPagar.setOnClickListener(v -> registrarFactura(true));
-        btnDomiciliar.setOnClickListener(v -> registrarFactura(false));
+        cargarContratos();
     }
 
     /**
-     * Cierra la actividad si el usuario ha cerrado sesión.
+     * Finaliza la actividad si no hay usuario logueado.
      */
     @Override
     protected void onResume() {
         super.onResume();
-        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
-            finish();
-        }
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) finish();
     }
 
     /**
-     * Obtiene el contrato firmado del usuario y muestra sus datos.
-     * También llama a {@link #verificarRestricciones(String)} para controlar
-     * si se puede pagar o domiciliar.
+     * Recupera los contratos firmados del usuario y crea tarjetas individuales por cada uno.
      */
-    private void cargarContratoFirmado() {
-        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
-            Toast.makeText(this, "Usuario no autenticado", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
+    private void cargarContratos() {
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         db.collection("usuarios").document(uid).collection("contratos")
                 .whereEqualTo("firmado", true)
-                .limit(1)
                 .get()
                 .addOnSuccessListener(snapshots -> {
-                    if (!snapshots.isEmpty()) {
-                        DocumentSnapshot doc = snapshots.getDocuments().get(0);
+                    layoutContratos.removeAllViews();
+
+                    if (snapshots.isEmpty()) {
+                        tvSinContratos.setVisibility(View.VISIBLE);
+                        return;
+                    }
+
+                    tvSinContratos.setVisibility(View.GONE);
+
+                    for (DocumentSnapshot doc : snapshots) {
                         Map<String, Object> data = doc.getData();
-                        if (data == null) return;
+                        if (data == null) continue;
 
                         String ciudad = (String) data.get("ciudad");
                         String descripcion = (String) data.get("descripcion");
-                        String precioStr = String.valueOf(data.get("precio")).replaceAll("[^\\d.]", "");
-                        try {
-                            precioGlobal = Double.parseDouble(precioStr);
-                        } catch (Exception e) {
-                            precioGlobal = 0;
-                        }
-
+                        String precioStr = String.valueOf(data.get("precio"));
                         List<String> imagenes = (List<String>) data.get("imagenes");
+                        String contratoId = doc.getId();
 
-                        tvCiudad.setText("Ciudad: " + ciudad);
-                        tvDescripcion.setText(descripcion);
-                        tvPrecio.setText("Precio: " + precioStr + "€");
+                        // Generar ID de factura por contrato y mes
+                        String mes = new SimpleDateFormat("yyyyMM", Locale.getDefault()).format(new Date());
+                        String facturaId = "factura_" + contratoId + "_" + mes;
 
-                        if (imagenes != null && !imagenes.isEmpty()) {
-                            Glide.with(this).load(imagenes.get(0)).into(ivTrastero);
-                        }
+                        // Verificar estado antes de crear la vista
+                        db.collection("usuarios").document(uid)
+                                .collection("facturas")
+                                .document(facturaId)
+                                .get()
+                                .addOnSuccessListener(facturaDoc -> {
 
-                        verificarRestricciones(uid);
-                    } else {
-                        Toast.makeText(this, "No se encontró ningún contrato firmado.", Toast.LENGTH_SHORT).show();
+                                    db.collection("usuarios").document(uid)
+                                            .collection("contratos")
+                                            .document(contratoId)
+                                            .get()
+                                            .addOnSuccessListener(contratoDoc -> {
+
+                                                boolean pagado = facturaDoc.exists() &&
+                                                        "pagada".equalsIgnoreCase(facturaDoc.getString("estado"));
+
+                                                boolean domiciliado = contratoDoc.getBoolean("domiciliado") != null &&
+                                                        contratoDoc.getBoolean("domiciliado");
+
+                                                // Inflar vista de tarjeta
+                                                View card = getLayoutInflater().inflate(R.layout.card_contrato, null);
+
+                                                ImageView iv = card.findViewById(R.id.ivTrastero);
+                                                TextView tvInfo = card.findViewById(R.id.tvInfo);
+                                                TextView tvPrecio = card.findViewById(R.id.tvPrecio);
+                                                Button btnPagar = card.findViewById(R.id.btnPagar);
+                                                Button btnDomiciliar = card.findViewById(R.id.btnDomiciliar);
+                                                Button btnEstado = card.findViewById(R.id.btnEstado);
+
+                                                if (imagenes != null && !imagenes.isEmpty()) {
+                                                    Glide.with(this).load(imagenes.get(0)).into(iv);
+                                                }
+
+                                                tvInfo.setText("\ud83d\udccd Ciudad: " + ciudad + "\n" + descripcion);
+                                                tvPrecio.setText("\ud83d\udcb6 Precio: " + precioStr);
+
+                                                if (domiciliado) {
+                                                    btnPagar.setVisibility(View.GONE);
+                                                    btnDomiciliar.setVisibility(View.GONE);
+                                                    btnEstado.setText("PAGO DOMICILIADO");
+                                                    btnEstado.setVisibility(View.VISIBLE);
+                                                } else if (pagado) {
+                                                    btnPagar.setVisibility(View.GONE);
+                                                    btnEstado.setText("FACTURA PAGADA");
+                                                    btnEstado.setVisibility(View.VISIBLE);
+                                                } else {
+                                                    btnEstado.setVisibility(View.GONE);
+                                                    btnPagar.setVisibility(View.VISIBLE);
+                                                    btnDomiciliar.setVisibility(View.VISIBLE);
+                                                }
+
+                                                btnPagar.setOnClickListener(v -> {
+                                                    pagarFactura(uid, contratoId, precioStr);
+                                                    btnPagar.setEnabled(false);
+                                                    btnPagar.setVisibility(View.GONE);
+                                                    btnEstado.setText("FACTURA PAGADA");
+                                                    btnEstado.setVisibility(View.VISIBLE);
+                                                });
+
+                                                btnDomiciliar.setOnClickListener(v -> {
+                                                    domiciliarContrato(uid, contratoId);
+                                                    btnPagar.setEnabled(false);
+                                                    btnDomiciliar.setEnabled(false);
+                                                    btnPagar.setVisibility(View.GONE);
+                                                    btnDomiciliar.setVisibility(View.GONE);
+                                                    btnEstado.setText("PAGO DOMICILIADO");
+                                                    btnEstado.setVisibility(View.VISIBLE);
+                                                });
+                                                layoutContratos.addView(card);
+                                            });
+                                });
                     }
-                })
-                .addOnFailureListener(e -> Toast.makeText(this, "Error al cargar datos", Toast.LENGTH_SHORT).show());
-    }
-
-    /**
-     * Desactiva los botones de pago o domiciliación si ya se ha pagado en el mes actual
-     * o si el contrato está marcado como domiciliado.
-     *
-     * @param uid UID del usuario autenticado.
-     */
-    private void verificarRestricciones(String uid) {
-        db.collection("usuarios").document(uid).collection("contratos")
-                .whereEqualTo("firmado", true)
-                .limit(1)
-                .get()
-                .addOnSuccessListener(contratos -> {
-                    if (!contratos.isEmpty()) {
-                        Boolean domiciliado = contratos.getDocuments().get(0).getBoolean("domiciliado");
-                        if (domiciliado != null && domiciliado) {
-                            btnPagar.setEnabled(false);
-                            btnDomiciliar.setEnabled(false);
-                            return;
-                        }
-                    }
-
-                    String mesActual = new SimpleDateFormat("yyyyMM", Locale.getDefault()).format(new Date());
-
-                    db.collection("usuarios").document(uid)
-                            .collection("facturas")
-                            .document("factura_" + mesActual)
-                            .get()
-                            .addOnSuccessListener(doc -> {
-                                if (doc.exists()) {
-                                    String estado = doc.getString("estado");
-                                    Timestamp fecha = doc.getTimestamp("fecha");
-
-                                    if ("pagada".equalsIgnoreCase(estado) && fecha != null) {
-                                        long dias = (Timestamp.now().getSeconds() - fecha.getSeconds()) / (60 * 60 * 24);
-                                        if (dias < 30) {
-                                            btnPagar.setEnabled(false);
-                                        }
-                                    }
-                                }
-                            });
                 });
     }
 
     /**
-     * Registra la factura del usuario en Firestore.
-     * Si {@code pagoUnico} es true, se marca como pagada manualmente.
-     * Si es false, se actualiza el contrato para indicar que el pago está domiciliado.
-     *
-     * @param pagoUnico true si es un pago manual, false para domiciliación.
+     * Registra una factura pagada simulada para un contrato en el mes actual.
      */
-    private void registrarFactura(boolean pagoUnico) {
-        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+    private void pagarFactura(String uid, String contratoId, String importeTexto) {
+        String mes = new SimpleDateFormat("yyyyMM", Locale.getDefault()).format(new Date());
+        String facturaId = "factura_" + contratoId + "_" + mes;
 
-        if (pagoUnico) {
-            Map<String, Object> factura = new HashMap<>();
-            factura.put("fecha", Timestamp.now());
-            factura.put("importe", precioGlobal);
-            factura.put("estado", "pagada");
+        Map<String, Object> factura = new HashMap<>();
+        factura.put("fecha", Timestamp.now());
+        factura.put("importe", importeTexto);
+        factura.put("estado", "pagada");
 
-            String mesFactura = new SimpleDateFormat("yyyyMM", Locale.getDefault()).format(new Date());
+        db.collection("usuarios").document(uid)
+                .collection("facturas")
+                .document(facturaId)
+                .set(factura)
+                .addOnSuccessListener(aVoid -> Toast.makeText(this, "Factura pagada.", Toast.LENGTH_SHORT).show())
+                .addOnFailureListener(e -> Toast.makeText(this, "Error al pagar factura.", Toast.LENGTH_SHORT).show());
+    }
 
-            db.collection("usuarios").document(uid)
-                    .collection("facturas")
-                    .document("factura_" + mesFactura)
-                    .set(factura)
-                    .addOnSuccessListener(docRef -> {
-                        Toast.makeText(this, "Factura pagada.", Toast.LENGTH_SHORT).show();
-                        btnPagar.setEnabled(false);
-                    })
-                    .addOnFailureListener(e -> Toast.makeText(this, "Error al pagar.", Toast.LENGTH_SHORT).show());
-
-        } else {
-            db.collection("usuarios").document(uid)
-                    .collection("contratos")
-                    .whereEqualTo("firmado", true)
-                    .limit(1)
-                    .get()
-                    .addOnSuccessListener(snapshots -> {
-                        if (!snapshots.isEmpty()) {
-                            String id = snapshots.getDocuments().get(0).getId();
-                            db.collection("usuarios").document(uid)
-                                    .collection("contratos").document(id)
-                                    .update("domiciliado", true)
-                                    .addOnSuccessListener(unused -> {
-                                        Toast.makeText(this, "Pago domiciliado.", Toast.LENGTH_SHORT).show();
-                                        btnPagar.setEnabled(false);
-                                        btnDomiciliar.setEnabled(false);
-                                    })
-                                    .addOnFailureListener(e -> Toast.makeText(this, "Error al domiciliar.", Toast.LENGTH_SHORT).show());
-                        }
-                    });
-        }
+    /**
+     * Marca un contrato individual como domiciliado.
+     */
+    private void domiciliarContrato(String uid, String contratoId) {
+        db.collection("usuarios").document(uid)
+                .collection("contratos")
+                .document(contratoId)
+                .update("domiciliado", true)
+                .addOnSuccessListener(aVoid -> Toast.makeText(this, "Pago domiciliado.", Toast.LENGTH_SHORT).show())
+                .addOnFailureListener(e -> Toast.makeText(this, "Error al domiciliar.", Toast.LENGTH_SHORT).show());
     }
 }

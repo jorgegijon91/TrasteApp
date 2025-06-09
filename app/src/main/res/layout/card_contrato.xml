@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Layout de tarjeta para cada trastero.
+    Muestra imagen, información, precio y botones de acción.
+    Incluye botón de estado deshabilitado para indicar si está pagado o domiciliado.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@android:color/white"
+    android:layout_marginBottom="16dp"
+    android:elevation="2dp">
+
+    <!-- Imagen del trastero -->
+    <ImageView
+        android:id="@+id/ivTrastero"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:scaleType="centerCrop"
+        android:contentDescription="Imagen del trastero"
+        android:layout_marginBottom="12dp" />
+
+    <!-- Información de ciudad y descripción -->
+    <TextView
+        android:id="@+id/tvInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ciudad y descripción"
+        android:textSize="16sp"
+        android:textColor="#000000"
+        android:layout_marginBottom="6dp" />
+
+    <!-- Precio del trastero -->
+    <TextView
+        android:id="@+id/tvPrecio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Precio"
+        android:textStyle="bold"
+        android:textColor="#2962FF"
+        android:textSize="16sp"
+        android:layout_marginBottom="12dp" />
+
+    <!-- Botón de estado (pagado o domiciliado) -->
+    <Button
+        android:id="@+id/btnEstado"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="ESTADO"
+        android:enabled="false"
+        android:visibility="gone"
+        android:backgroundTint="#D3D3D3"
+        android:textColor="#555555"
+        android:textAllCaps="true"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Botón de pagar factura -->
+    <Button
+        android:id="@+id/btnPagar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Pagar factura"
+        android:backgroundTint="#2962FF"
+        android:textColor="@android:color/white"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Botón de domiciliar pago -->
+    <Button
+        android:id="@+id/btnDomiciliar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Domiciliar pago"
+        android:backgroundTint="#4CAF50"
+        android:textColor="@android:color/white" />
+
+</LinearLayout>
