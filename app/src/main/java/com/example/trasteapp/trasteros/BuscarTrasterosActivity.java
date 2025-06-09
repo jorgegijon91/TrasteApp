@@ -58,9 +58,9 @@ public class BuscarTrasterosActivity extends AppCompatActivity implements OnMapR
         // Añade marcadores de distintas comunidades
         addComunidad("Asturias", 43.3619, -5.8494, "Trasteros desde 45€/mes");
         addComunidad("Comunidad de Madrid", 40.4168, -3.7038, "Trasteros desde 68€/mes");
-        addComunidad("Cataluña", 41.3851, 2.1734, "Trasteros desde 100€/mes");
-        addComunidad("Comunidad Valenciana", 39.4699, -0.3763, "Trasteros desde 90€/mes");
-        addComunidad("Andalucía", 37.3886, -5.9823, "Trasteros desde 80€/mes");
+        addComunidad("Cataluña", 41.3851, 2.1734, "Trasteros desde 80€/mes");
+        addComunidad("Comunidad Valenciana", 39.4699, -0.3763, "Trasteros desde 60€/mes");
+        addComunidad("Andalucía", 37.3886, -5.9823, "Trasteros desde 75€/mes");
 
         // Evento al hacer clic en la ventana de un marcador
         mMap.setOnInfoWindowClickListener(marker -> {
