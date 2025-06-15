@@ -10,7 +10,7 @@
         android:id="@+id/detalle_ciudad"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Ciudad"
+        android:text="@string/ciudad"
         android:textSize="20sp"
         android:textStyle="bold" />
 
@@ -18,14 +18,14 @@
         android:id="@+id/detalle_descripcion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Descripción"
+        android:text="@string/descripci_n"
         android:layout_marginTop="8dp" />
 
     <TextView
         android:id="@+id/detalle_precio"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Precio"
+        android:text="@string/precio"
         android:textColor="#2962FF"
         android:textStyle="bold"
         android:layout_marginTop="4dp" />
@@ -47,14 +47,14 @@
             android:id="@+id/boton_alquilar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Reservar trastero"
+            android:text="@string/reservar_trastero"
             android:layout_marginEnd="16dp" />
 
         <Button
             android:id="@+id/boton_cancelar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Cancelar" />
+            android:text="@string/cancelar" />
     </LinearLayout>
 
 </LinearLayout>

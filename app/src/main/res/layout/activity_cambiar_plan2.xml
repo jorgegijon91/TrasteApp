@@ -11,7 +11,7 @@
         android:id="@+id/textViewTitulo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Selecciona tu plan"
+        android:text="@string/selecciona_tu_plan"
         android:textSize="22sp"
         android:textColor="#000000"
         android:textStyle="bold"
@@ -27,14 +27,14 @@
             android:id="@+id/radioGratuito"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Gratuito"
+            android:text="@string/gratuito"
             android:checked="true" />
 
         <RadioButton
             android:id="@+id/radioPremium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Premium (acceso completo)" />
+            android:text="@string/premium_acceso_completo" />
     </RadioGroup>
 
     <Button

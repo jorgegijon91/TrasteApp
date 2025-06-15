@@ -88,7 +88,7 @@
 
         <Button
             android:id="@+id/buttonActualizarPerfil"
-            android:text="Actualizar perfil"
+            android:text="@string/actualizar_perfil"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="#2962FF"
@@ -99,7 +99,7 @@
 
         <Button
             android:id="@+id/buttonCambiarPlan"
-            android:text="Cambiar plan"
+            android:text="@string/cambiar_plan"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="#FFEB3B"

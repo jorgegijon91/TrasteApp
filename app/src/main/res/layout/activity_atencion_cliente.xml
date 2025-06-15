@@ -7,13 +7,13 @@
 
     <EditText
         android:id="@+id/edit_asunto"
-        android:hint="Asunto"
+        android:hint="@string/asunto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
     <EditText
         android:id="@+id/edit_mensaje"
-        android:hint="Mensaje"
+        android:hint="@string/mensaje"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:gravity="top"
@@ -22,7 +22,7 @@
 
     <Button
         android:id="@+id/boton_enviar"
-        android:text="Enviar"
+        android:text="@string/enviar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp" />

@@ -23,14 +23,14 @@
 
         <EditText
             android:id="@+id/editNombre"
-            android:hint="Nuevo nombre"
+            android:hint="@string/nuevo_nombre"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"/>
 
         <EditText
             android:id="@+id/editPassword"
-            android:hint="Nueva contraseña"
+            android:hint="@string/nueva_contrase_a"
             android:inputType="textPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -38,7 +38,7 @@
 
         <Button
             android:id="@+id/btnGuardar"
-            android:text="Guardar cambios"
+            android:text="@string/guardar_cambios"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="#2962FF"
@@ -49,7 +49,7 @@
 
         <Button
             android:id="@+id/btnCancelar"
-            android:text="Cancelar"
+            android:text="@string/cancelarCambios"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="#D32F2F"

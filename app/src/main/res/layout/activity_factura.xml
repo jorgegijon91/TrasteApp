@@ -16,7 +16,7 @@
             android:id="@+id/tvSinContratos"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="No tienes contratos firmados aún."
+            android:text="@string/no_tienes_contratos_firmados_a_n"
             android:textColor="#888888"
             android:textSize="16sp"
             android:layout_marginTop="48dp"

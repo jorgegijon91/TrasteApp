@@ -80,7 +80,7 @@
         android:id="@+id/tvPoliticaPrivacidad"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Política de Privacidad"
+        android:text="@string/pol_tica_de_privacidad"
         android:textSize="14sp"
         android:textColor="@android:color/holo_blue_light"
         android:textStyle="italic"

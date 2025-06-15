@@ -53,7 +53,7 @@
 
         <!-- Descripción -->
         <TextView
-            android:text="Encuentra empresas de transporte para tus traslados"
+            android:text="@string/encuentra_empresas_de_transporte_para_tus_traslados"
             android:textSize="14sp"
             android:gravity="center"
             android:layout_gravity="center"
@@ -64,7 +64,7 @@
     <!-- Campo de ubicación -->
     <EditText
         android:id="@+id/input_ubicacion"
-        android:hint="Introduce tu ciudad"
+        android:hint="@string/introduce_tu_ciudad"
         android:layout_marginBottom="12dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
@@ -72,7 +72,7 @@
     <!-- Botón buscar -->
     <Button
         android:id="@+id/boton_buscar"
-        android:text="Buscar"
+        android:text="@string/buscar"
         android:textColor="#FFFFFF"
         android:background="#2962FF"
         android:layout_width="match_parent"

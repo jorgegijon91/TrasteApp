@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="16sp"
-            android:text="Condiciones legales"
+            android:text="@string/condiciones_legales"
             android:layout_marginBottom="12dp" />
 
         <!-- Área de firma -->
@@ -33,7 +33,7 @@
             android:id="@+id/btn_limpiar_firma"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Limpiar firma"
+            android:text="@string/limpiar_firma"
             android:layout_marginBottom="10dp" />
 
         <!-- Botón enviar -->
@@ -41,6 +41,6 @@
             android:id="@+id/botonEnviarFirma"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Firmar y enviar" />
+            android:text="@string/firmar_y_enviar" />
     </LinearLayout>
 </ScrollView>
